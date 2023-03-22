@@ -1,4 +1,10 @@
-import { MOWER_MOVES, MowerMove, MowerPosition, Orientation } from "./types";
+import {
+  isRighOrLeft,
+  MOWER_MOVES,
+  MowerMove,
+  MowerPosition,
+  Orientation,
+} from "./types";
 const DEFAULT_CONFIG: MowerPosition = {
   x: 0,
   y: 0,
@@ -12,7 +18,9 @@ const MOVES_MAP = {
   W: [-1, 0],
 };
 
-const ORIENTATION_MAP: Record<Orientation, any> = {
+type RelativeOrientation = Record<"R" | "L", Orientation>;
+
+const ORIENTATION_MAP: Record<Orientation, RelativeOrientation> = {
   N: {
     R: "E",
     L: "W",
@@ -43,20 +51,12 @@ export class Mower {
     this.config = config;
   }
 
-  isValidDirection = (direction: string): direction is MowerMove => {
-    return MOWER_MOVES.includes(direction as MowerMove);
-  };
-
-  rotate = (direction: MowerMove) => {
-    const { orientation } = this.config;
-    this.config.orientation = ORIENTATION_MAP[orientation][direction];
-  };
   move(direction: string) {
     if (!this.isValidDirection(direction)) {
       throw new Error("Invalid direction");
     }
 
-    if (["R", "L"].includes(direction)) {
+    if (isRighOrLeft(direction)) {
       this.rotate(direction);
     }
     if (direction === "F") {
@@ -71,6 +71,14 @@ export class Mower {
       message: "Mower moved successfully",
       data: this.config,
     };
+  }
+
+  private isValidDirection(direction: string): direction is MowerMove {
+    return MOWER_MOVES.includes(direction as MowerMove);
+  }
+  private rotate(direction: "R" | "L") {
+    const { orientation } = this.config;
+    this.config.orientation = ORIENTATION_MAP[orientation][direction];
   }
 
   private moveMowerForward() {

@@ -12,7 +12,6 @@ export type Orientation = (typeof COMPASS)[number];
 export const MOWER_MOVES = ["R", "L", "F"] as const;
 export type MowerMove = (typeof MOWER_MOVES)[number];
 
-
 export interface MowerInstruction {
   lawn: WithPosition;
   mowers: MowerDescription[];
@@ -21,3 +20,6 @@ export interface MowerInstruction {
 export type MowerDescription = { initialPosition: MowerPosition } & {
   commands: MowerMove[];
 };
+
+export const isRighOrLeft = (move: MowerMove): move is "R" | "L" =>
+  move === "R" || move === "L";

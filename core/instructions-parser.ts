@@ -18,12 +18,16 @@ const isCorrectOrientation = (str: string): boolean =>
 const stringToNumbers = (str: string): number[] =>
   str.split("")?.map((char) => Number(char));
 
-const getCoords = (line: string): number[] => {
-  const coordsStr = line.split("");
-  if (
+function isCoordsInValid(coordsStr: string[]) {
+  return (
     coordsStr?.length !== MAGIC_NUMBERS.COORDS_COUNT ||
     coordsStr.some(isNotNumberString)
-  ) {
+  );
+}
+
+const getCoords = (line: string): number[] => {
+  const coordsStr = line.split("");
+  if (isCoordsInValid(coordsStr)) {
     throw new Error("Invalid instructions");
   }
   return stringToNumbers(line);
@@ -42,13 +46,17 @@ const getMowerCoords = (line: string): Array<string | number> => {
   return [...coords, orientation];
 };
 
+const isLinesCountCorrect = (linesCount: number): boolean => {
+  return (
+    linesCount >= MAGIC_NUMBERS.INSTRUCTIONS_LINES_PER_MAULER &&
+    linesCount % MAGIC_NUMBERS.INSTRUCTIONS_LINES_PER_MAULER === 0
+  );
+};
+
 const getMowerInstructions = (
   rawLines: string[]
 ): MowerInstruction["mowers"] => {
-  if (
-    rawLines.length < MAGIC_NUMBERS.INSTRUCTIONS_LINES_PER_MAULER ||
-    rawLines.length % MAGIC_NUMBERS.INSTRUCTIONS_LINES_PER_MAULER !== 0
-  ) {
+  if (!isLinesCountCorrect(rawLines.length)) {
     throw new Error("Invalid instructions");
   }
   const mowers: MowerDescription[] = [];

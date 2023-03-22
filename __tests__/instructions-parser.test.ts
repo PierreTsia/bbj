@@ -13,7 +13,7 @@ const INVALID_INSTRUCTIONS = [
   `NN
     44 S
     LFRRFFLFRFF
-    22 N
+    T2 N
     FFRLLRFRLF`,
   `NN
     44 S
