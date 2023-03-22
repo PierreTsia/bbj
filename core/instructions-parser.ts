@@ -5,19 +5,29 @@ import {
   Orientation,
 } from "./types";
 
-const MIN_MOWER_LINE_COUNT = 3;
+const MAGIC_NUMBERS = Object.freeze({
+  COORDS_COUNT: 2, // x and y
+  INSTRUCTIONS_LINES_PER_MAULER: 2,
+});
+
+const isNotNumberString = (str: string): boolean => isNaN(Number(str));
+
+const isCorrectOrientation = (str: string): boolean =>
+  compass.includes(str as Orientation);
 
 const stringToNumbers = (str: string): number[] =>
   str.split("")?.map((char) => Number(char));
 
 const getCoords = (line: string): number[] => {
-  if (!line || line.split("")?.length !== 2)
-    throw new Error("Invalid instructions");
-  return stringToNumbers(line);
-};
+  const coordsStr = line.split("");
 
-const isValidCoords = (coords: unknown[]): boolean => {
-  return coords.every((c) => !isNaN(c as number));
+  if (
+    coordsStr?.length !== MAGIC_NUMBERS.COORDS_COUNT ||
+    coordsStr.some(isNotNumberString)
+  ) {
+    throw new Error("Invalid instructions");
+  }
+  return stringToNumbers(line);
 };
 
 const getLinesFromRawText = (instructions: string) => {
@@ -26,22 +36,28 @@ const getLinesFromRawText = (instructions: string) => {
 
 const getMowerCoords = (line: string): Array<string | number> => {
   const [xy, orientation] = line.split(" ") as [string, Orientation];
-  if (!compass.includes(orientation) || !xy || xy.split("")?.length !== 2) {
+  if (!isCorrectOrientation(orientation)) {
     throw new Error("Invalid instructions");
   }
-  const coords = stringToNumbers(xy);
+  const coords = getCoords(xy);
   return [...coords, orientation];
 };
-
 
 const getMowerInstructions = (
   rawLines: string[]
 ): MowerInstruction["mowers"] => {
-  if (rawLines.length % 2 !== 0) {
+  if (
+    rawLines.length < MAGIC_NUMBERS.INSTRUCTIONS_LINES_PER_MAULER ||
+    rawLines.length % MAGIC_NUMBERS.INSTRUCTIONS_LINES_PER_MAULER !== 0
+  ) {
     throw new Error("Invalid instructions");
   }
-  const mowers = [] as any;
-  for (let i = 0; i < rawLines.length; i += 2) {
+  const mowers: MowerDescription[] = [];
+  for (
+    let i = 0;
+    i < rawLines.length;
+    i += MAGIC_NUMBERS.INSTRUCTIONS_LINES_PER_MAULER
+  ) {
     const [x, y, orientation] = getMowerCoords(rawLines[i]);
     mowers.push({
       initialPosition: {
@@ -61,13 +77,6 @@ export const parseInstructions = (instructions: string): MowerInstruction => {
   const [x, y] = getCoords(lawnLine);
   const mowers: MowerInstruction["mowers"] =
     getMowerInstructions(mowerInstructions);
-
-  if (
-    mowerInstructions.length < MIN_MOWER_LINE_COUNT ||
-    !isValidCoords([x, y])
-  ) {
-    throw new Error("Invalid instructions");
-  }
 
   return {
     lawn: { x, y },

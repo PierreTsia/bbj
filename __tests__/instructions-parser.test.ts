@@ -51,7 +51,6 @@ describe("Instructions Parser", () => {
 
   it("should return a valid MowerInstruction object", () => {
     const instructions = parseInstructions(VALID_INSTRUCTIONS);
-    console.log(instructions);
     expect(instructions.lawn).toEqual({ x: 5, y: 5 });
     expect(instructions.mowers).toHaveLength(2);
     expect(instructions.mowers[0].initialPosition).toEqual({
