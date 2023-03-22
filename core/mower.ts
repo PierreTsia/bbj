@@ -4,6 +4,7 @@ import {
   MowerMove,
   MowerPosition,
   Orientation,
+  RightOrLeft,
 } from "./types";
 const DEFAULT_CONFIG: MowerPosition = {
   x: 0,
@@ -18,7 +19,7 @@ const MOVES_MAP = {
   W: [-1, 0],
 };
 
-type RelativeOrientation = Record<"R" | "L", Orientation>;
+type RelativeOrientation = Record<RightOrLeft, Orientation>;
 
 const ORIENTATION_MAP: Record<Orientation, RelativeOrientation> = {
   N: {
@@ -76,7 +77,7 @@ export class Mower {
   private isValidDirection(direction: string): direction is MowerMove {
     return MOWER_MOVES.includes(direction as MowerMove);
   }
-  private rotate(direction: "R" | "L") {
+  private rotate(direction: RightOrLeft) {
     const { orientation } = this.config;
     this.config.orientation = ORIENTATION_MAP[orientation][direction];
   }
