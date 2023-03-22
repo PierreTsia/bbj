@@ -1,4 +1,4 @@
-interface WithPosition {
+export interface WithPosition {
   x: number;
   y: number;
 }
@@ -6,10 +6,12 @@ export interface MowerPosition extends WithPosition {
   orientation: Orientation;
 }
 
-export const compass = ["N", "E", "W", "S"] as const;
-export type Orientation = (typeof compass)[number];
+export const COMPASS = ["N", "E", "W", "S"] as const;
+export type Orientation = (typeof COMPASS)[number];
 
-type MowerMove = "R" | "L" | "F";
+export const MOWER_MOVES = ["R", "L", "F"] as const;
+export type MowerMove = (typeof MOWER_MOVES)[number];
+
 
 export interface MowerInstruction {
   lawn: WithPosition;

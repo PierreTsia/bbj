@@ -1,5 +1,5 @@
 import {
-  compass,
+  COMPASS,
   MowerDescription,
   MowerInstruction,
   Orientation,
@@ -13,14 +13,13 @@ const MAGIC_NUMBERS = Object.freeze({
 const isNotNumberString = (str: string): boolean => isNaN(Number(str));
 
 const isCorrectOrientation = (str: string): boolean =>
-  compass.includes(str as Orientation);
+  COMPASS.includes(str as Orientation);
 
 const stringToNumbers = (str: string): number[] =>
   str.split("")?.map((char) => Number(char));
 
 const getCoords = (line: string): number[] => {
   const coordsStr = line.split("");
-
   if (
     coordsStr?.length !== MAGIC_NUMBERS.COORDS_COUNT ||
     coordsStr.some(isNotNumberString)
