@@ -1,4 +1,4 @@
-import {MOWER_MOVES, MowerMove, MowerPosition, Orientation} from "./types";
+import { MOWER_MOVES, MowerMove, MowerPosition, Orientation } from "./types";
 const DEFAULT_CONFIG: MowerPosition = {
   x: 0,
   y: 0,
@@ -12,7 +12,7 @@ const MOVES_MAP = {
   W: [-1, 0],
 };
 
-const ORIENTATION_MAP:Record<Orientation, any> = {
+const ORIENTATION_MAP: Record<Orientation, any> = {
   N: {
     R: "E",
     L: "W",
